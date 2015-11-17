@@ -29,32 +29,56 @@ public class BlackJack {
 
                 Messages.ClearScreen();
                 Messages.NewGame();
-                System.out.println("DEALER:");
-                printDealerHand(dealer);
-                System.out.printf("USER:");
+                printDealerHand(dealer, false);
                 printHand(user);
-                System.out.println("---------");
-                System.out.println("1. Hit \n2. Stay");
-                System.out.println("");
-                bustedCheck(user);
 
-                while (user.getValue() < 21) {
+                if (bustedCheck(user) == true) {
+                    System.out.println("Busted!");
+                    System.out.print("Dealer Wins!\n");
+                    return;
+                }
+                while (user.getValue() <= 21 && bustedCheck(user) == false) {
+                    System.out.println("---------");
+                    System.out.println("1. Hit \n2. Stay");
                     int cont = input.nextInt();
-                    if (cont == 2) {
-                        break;
-                    }
+                    if (cont == 2) break;       
+                    
                     user.Draw(deck);
                     printHand(user);
-                    bustedCheck(user);
                 }
+                
+                System.out.println("\n\n\n\n");
+                printDealerHand(dealer, true);
+
+                if (bustedCheck(dealer) == true) {
+                    System.out.println("Busted!");
+                    System.out.print("User Wins!");
+                    return;
+                }
+                while (dealer.getValue() < user.getValue()
+                        && bustedCheck(user) == false
+                        && bustedCheck(dealer) == false) {
+                    dealer.Draw(deck);
+                    System.out.println("Dealer Draws!");
+                    printDealerHand(dealer, true);
+                }
+
+                if (dealer.getValue() > user.getValue() && dealer.getValue() > 21) {
+                    System.out.println("PLAYER WINS!");
+                } else {
+                    System.out.println("DEALER WINS!");
+                }
+
             }
             case 2:
                 break;
         }
+
+////////////////////////////////////////////////////////////////////////////////
     }
 
     public static void printHand(Player obj) {
-        System.out.printf("Value : %d", obj.getValue());
+        System.out.printf("Player : %d", obj.getValue());
         System.out.print("  |  ");
         System.out.print("Cards: ");
         for (int i = 0; i < obj.getSize(); i++) {
@@ -63,12 +87,16 @@ public class BlackJack {
         System.out.println("");
     }
 
-    public static void printDealerHand(Player obj) {
-        System.out.printf("Value : %d", obj.getValue());
+    public static void printDealerHand(Player obj, boolean showHand) {
+        if (showHand == true) {
+            System.out.printf("Dealer : %d", obj.getValue());
+        } else {
+            System.out.print("Dealer : ??");
+        }
         System.out.print("  |  ");
         System.out.print("Cards: ");
         for (int i = 0; i < obj.getSize(); i++) {
-            if (i == obj.getSize() - 1) {
+            if (i == obj.getSize() - 1 && showHand == false) {
                 System.out.print("X");
             } else {
                 System.out.print(obj.getRank(i) + " ");
@@ -78,12 +106,7 @@ public class BlackJack {
     }
 
     public static boolean bustedCheck(Player obj) {
-        if (obj.getValue() >= 21) {
-            System.out.println("BUSTED!");
-            return true;
-        } else {
-            return false;
-        }
+        return obj.getValue() >= 21;
     }
 
 }
