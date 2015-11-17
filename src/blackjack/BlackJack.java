@@ -7,15 +7,14 @@ import java.util.Scanner;
 public class BlackJack {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        int menuChoice1;
-        int menuChoice2;
+        int menuChoice;
 
         Messages.BlackJack();
         Messages.Menu_1();
         System.out.print("Choice : ");
-
-        menuChoice1 = input.nextInt();
-        switch (menuChoice1) {
+        menuChoice = input.nextInt();
+        
+        switch (menuChoice) {
             case 1: {
                 Deck deck = new Deck();
                 Player user = new Player();
@@ -52,6 +51,7 @@ public class BlackJack {
 
         }
     }
+    
     public static void printHand(Player obj) {
         System.out.printf("Value : %d", obj.getValue());
         System.out.print("  |  ");
@@ -61,7 +61,6 @@ public class BlackJack {
         }
         System.out.println("");
     }
-
     public static void printDealerHand(Player obj) {
         System.out.printf("Value : %d", obj.getValue());
         System.out.print("  |  ");
@@ -76,11 +75,11 @@ public class BlackJack {
         }
         System.out.println("");
     }
-
-    public static void bustedCheck(Player obj) {
+    public static boolean bustedCheck(Player obj) {
         if (obj.getValue() >= 21) {
             System.out.println("BUSTED!");
-        }
+            return true;
+        } else return false;
     }
 
 }
